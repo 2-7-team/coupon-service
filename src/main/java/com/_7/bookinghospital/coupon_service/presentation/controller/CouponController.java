@@ -1,14 +1,16 @@
 package com._7.bookinghospital.coupon_service.presentation.controller;
 
+import com._7.bookinghospital.coupon_service.application.dto.request.CouponCreateRequestDto;
+import com._7.bookinghospital.coupon_service.application.dto.request.CouponUpdateRequestDto;
+import com._7.bookinghospital.coupon_service.application.dto.response.CouponDetailsResponse;
+import com._7.bookinghospital.coupon_service.application.dto.response.CouponListResponseDto;
+import com._7.bookinghospital.coupon_service.application.dto.response.CouponResponseDto;
 import com._7.bookinghospital.coupon_service.application.service.CouponService;
-import com._7.bookinghospital.coupon_service.domain.model.Coupon;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -18,35 +20,30 @@ public class CouponController {
 
     private final CouponService couponService;
 
-    //dto 네이밍?
     @PostMapping
-    public ResponseEntity<Void> createCoupon(@RequestBody CreateCouponRequest request) {
-        couponService.createCoupon(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public CouponResponseDto createCoupon(@RequestBody CouponCreateRequestDto requestDto) {
+        return couponService.createCoupon(requestDto);
     }
 
     @GetMapping
-    public ResponseEntity<CouponListResponse> getAllCoupons() {
-        CouponListResponse response = couponService.getAllCoupons();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<CouponListResponseDto> getAllCoupons() {
+        CouponListResponseDto response = couponService.getAllCoupons();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
-    @GetMapping("/{coupon/id}")
-    public ResponseEntity<CouponDetailReponse> getCouponById(@PathVariable("coupon_id") UUID couponId) {
-        CouponDetailReponse reponse = couponService.getCouponDetails(couponId);
-        return ResponseEntity.ok(reponse);
+    @GetMapping("/{couponId}")
+    public CouponDetailsResponse getCouponDetails(@PathVariable UUID couponId) {
+        return couponService.getCouponDetails(couponId);
     }
 
-    @PatchMapping("/{coupon_id}")
-    public ResponseEntity<Void> updateCoupon(@PathVariable("coupon_id") UUID couponId,
-                                             @RequestBody UpdateCouponRequest request) {
-        couponService.updateCoupon(couponId, request);
-        return ResponseEntity.noContent().build();
+    @PatchMapping("/{couponId}")
+    public CouponResponseDto updateCoupon(@PathVariable UUID couponId,
+                                          @RequestBody CouponUpdateRequestDto requestDto) {
+        return couponService.updateCoupon(couponId, requestDto);
     }
 
-    //리턴값?
-    @DeleteMapping("/{coupon_id}")
-    public ResponseEntity<Void> deleteCoupon(@PathVariable("coupon_id") UUID couponId) {
-        return null;
+    @DeleteMapping("/{couponId}")
+    public void deleteCoupon(@PathVariable UUID couponId) {
+        couponService.deleteCoupon(couponId);
     }
 }
