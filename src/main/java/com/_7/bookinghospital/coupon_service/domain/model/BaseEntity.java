@@ -30,11 +30,10 @@ public abstract class BaseEntity {
     @LastModifiedBy
     protected Long updatedBy;
 
-    protected boolean is_deleted;
+    protected boolean isDeleted;
 
-    // delete() 메서드 호출시 updatedAt 과 updatedBy 자동으로 데이터 입력됨.
     public void delete(Long deletedBy) {
-        this.is_deleted = true;
+        this.isDeleted = true;
     }
 }
 
